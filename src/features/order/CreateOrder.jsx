@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant';
+import Button from '../user/Button';
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -50,13 +51,13 @@ function CreateOrder() {
       <Form method="POST">
         <div>
           <label>First Name</label>
-          <input type="text" name="customer" required />
+          <input className="input" type="text" name="customer" required />
         </div>
 
         <div>
           <label>Phone number</label>
           <div>
-            <input type="tel" name="phone" required />
+            <input type="tel" name="phone" required className="input" />
           </div>
           {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
@@ -64,12 +65,13 @@ function CreateOrder() {
         <div>
           <label>Address</label>
           <div>
-            <input type="text" name="address" required />
+            <input className="input" type="text" name="address" required />
           </div>
         </div>
 
         <div>
           <input
+            className="h-6 w-6 accent-green-400 hover:cursor-pointer focus:ring focus:ring-green-400 focus:ring-offset-2 focus:outline-none"
             type="checkbox"
             name="priority"
             id="priority"
@@ -82,12 +84,9 @@ function CreateOrder() {
         <div>
           {/* we can send any data to form field without asking the user , by using input field */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <button
-            disabled={isSubmitting}
-            className="inline-block rounded-full bg-green-400 px-2 py-2 font-semibold tracking-wide uppercase transition-colors duration-300 text-shadow-stone-800 hover:cursor-pointer hover:bg-green-300 focus:bg-red-300 focus:ring focus:ring-amber-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed"
-          >
+          <Button type="primary">
             {isSubmitting ? 'Ordering.....' : 'Order now'}
-          </button>
+          </Button>
         </div>
       </Form>
       {/* when we submit the form, it will call the action function below, and will pass request as parameter */}

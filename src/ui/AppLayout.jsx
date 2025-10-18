@@ -12,7 +12,7 @@ function AppLayout() {
       {isLoading && <Loading />}
 
       <Header />
-      <main className="max-w-3xl overflow-scroll">
+      <main className="max-w-3xl overflow-x-scroll">
         <Outlet />
       </main>
       <CartOverview />
