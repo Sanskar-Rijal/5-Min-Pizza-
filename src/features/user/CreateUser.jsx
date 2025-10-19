@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import Button from './Button';
+import { useState } from "react";
+import Button from "./Button";
 
 function CreateUser() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -19,12 +19,14 @@ function CreateUser() {
         placeholder="Your full name"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className="input"
+        className="input mb-3 w-full md:w-2xl"
       />
 
-      {username !== '' && (
+      {username !== "" && (
         <div>
-          <Button type="primary">Start ordering</Button>
+          <Button type="primary" to={"/menu"}>
+            Start ordering
+          </Button>
         </div>
       )}
     </form>
