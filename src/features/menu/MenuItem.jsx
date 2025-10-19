@@ -1,5 +1,5 @@
-import { formatCurrency } from '../../utils/helpers';
-import Button from '../user/Button';
+import { formatCurrency } from "../../utils/helpers";
+import Button from "../user/Button";
 
 function MenuItem({ pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
@@ -9,12 +9,12 @@ function MenuItem({ pizza }) {
       <img
         src={imageUrl}
         alt={name}
-        className={`h-24 ${soldOut ? 'opacity-80 grayscale' : ''}`}
+        className={`h-24 ${soldOut ? "opacity-80 grayscale" : ""}`}
       />
       <div className="flex flex-grow flex-col pt-0.5">
         <p className="font-medium">{name}</p>
         <p className="text-sm text-stone-500 capitalize italic">
-          {ingredients.join(', ')}
+          {ingredients.join(", ")}
         </p>
         <div className="mt-auto flex items-center justify-between">
           {!soldOut ? (
