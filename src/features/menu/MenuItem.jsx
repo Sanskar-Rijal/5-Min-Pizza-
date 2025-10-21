@@ -5,6 +5,7 @@ import { addItem, getCurrentQuantitybyId } from "../cart/cartSlice";
 import { useRef } from "react";
 import { flyToCart } from "../../utils/flyToCart";
 import DeleteItem from "../cart/DeleteItem";
+import UpdateItemQuantity from "../cart/UpdateItemQuantity";
 
 function MenuItem({ pizza, cartRef }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
@@ -57,7 +58,15 @@ function MenuItem({ pizza, cartRef }) {
           )}
 
           {/* if quantity of any pizza is greater than 0 then it is in the cart show delete button */}
-          {isInCart && <DeleteItem pizzaId={id} />}
+          {isInCart && (
+            <div className="flex items-center gap-3 sm:gap-7">
+              <UpdateItemQuantity
+                pizzaId={id}
+                currentQuantity={currentQuantity}
+              />
+              <DeleteItem pizzaId={id} />
+            </div>
+          )}
 
           {!soldOut && !isInCart && (
             <Button type="small" onClick={handleAddtoCart}>

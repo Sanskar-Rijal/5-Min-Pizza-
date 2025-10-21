@@ -10,6 +10,7 @@ function Button({ children, disabled, to, type, onClick }) {
     secondary:
       base +
       " px-4 py-3 sm:px-6 sm:py-3.5 bg-transparent border-2 border-red-300 hover:bg-red-300 text-stone-800",
+    round: base + "px-2.5 py-1 rounded-full text-sm md:px-3.5 md:py-2 ",
   };
 
   if (to) {
