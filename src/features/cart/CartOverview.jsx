@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getTotalCartPrice, getTotalCartQuantity } from "./cartSlice";
+import { forwardRef } from "react";
 
-function CartOverview() {
+const CartOverview = forwardRef((props, ref) => {
   const totalPizzas = useSelector(getTotalCartQuantity); //our cartSlice name is cart so state.cart and .cart another means cart array inside initialState
 
   const totalPrice = useSelector(getTotalCartPrice);
@@ -13,9 +14,13 @@ function CartOverview() {
         <span>{totalPizzas} pizzas</span>
         <span>${totalPrice}</span>
       </p>
-      <Link to="/cart">Open cart &rarr;</Link>
+      <Link to="/cart" ref={ref}>
+        Open cart &rarr;
+      </Link>
     </div>
   );
-}
+});
+
+CartOverview.displayName = "CartOverview";
 
 export default CartOverview;
