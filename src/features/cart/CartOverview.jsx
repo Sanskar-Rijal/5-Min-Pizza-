@@ -1,16 +1,11 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getTotalCartPrice } from "./cartSlice";
+import { getTotalCartPrice, getTotalCartQuantity } from "./cartSlice";
 
 function CartOverview() {
-  const totalPizzas = useSelector(getTotalCartPrice); //our cartSlice name is cart so state.cart and .cart another means cart array inside initialState
+  const totalPizzas = useSelector(getTotalCartQuantity); //our cartSlice name is cart so state.cart and .cart another means cart array inside initialState
 
-  const totalPrice = useSelector((state) =>
-    state.cart.cart.reduce(
-      (accumulator, pizza) => accumulator + pizza.totalPrice,
-      0,
-    ),
-  );
+  const totalPrice = useSelector(getTotalCartPrice);
 
   return (
     <div className="flex items-center justify-between bg-stone-800 px-4 py-4 text-sm text-stone-200 uppercase sm:px-9 md:text-base">

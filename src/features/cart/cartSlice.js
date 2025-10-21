@@ -58,8 +58,16 @@ export const {
 
 export default cartSlice.reducer;
 
-export const getTotalCartPrice = (state) =>
+export const getCart = (state) => state.cart.cart;
+
+export const getTotalCartQuantity = (state) =>
   state.cart.cart.reduce(
     (accumulator, pizza) => accumulator + pizza.quantity,
+    0,
+  );
+
+export const getTotalCartPrice = (state) =>
+  state.cart.cart.reduce(
+    (accumulator, pizza) => accumulator + pizza.totalPrice,
     0,
   );
