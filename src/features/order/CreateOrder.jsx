@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../user/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
 import EmptyCart from "../cart/EmptyCart";
 import store from "../../store";
+import { fetchAddress } from "../user/userSlice";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -42,7 +43,15 @@ function CreateOrder() {
   //const cart = fakeCart; //we want to send the cart to the form so that we can get from action
 
   const cart = useSelector(getCart);
-  const username = useSelector((state) => state.user.username);
+  const {
+    username,
+    status: addressStatus,
+    position,
+    address,
+    error: errorAddress,
+  } = useSelector((state) => state.user);
+
+  const isLoadingAddress = addressStatus === "loading";
 
   //total price of pizza calculation
   const totalCartPrice = useSelector(getTotalCartPrice);
@@ -52,10 +61,10 @@ function CreateOrder() {
   //showing loading when form is being submitted
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const dispatch = useDispatch();
 
   //using another custom hook to get errors from action
   const formErrors = useActionData();
-  console.log(formErrors);
 
   if (!cart.length) {
     return <EmptyCart />;
@@ -64,6 +73,7 @@ function CreateOrder() {
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-2xl font-semibold">Ready to order? Let's go!</h2>
+
       <Form method="POST">
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">First Name</label>
@@ -90,13 +100,35 @@ function CreateOrder() {
 
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
-          <div className="flex-grow">
+          <div className="relative flex-grow">
             <input
               className="input w-full"
+              defaultValue={address}
               type="text"
               name="address"
+              disabled={isLoadingAddress}
               required
             />
+            {addressStatus === "error" && (
+              <p className="mt-2 p-2 font-bold text-red-500">
+                {"*" + errorAddress}
+              </p>
+            )}
+
+            {!position.latitude && !position.longitude && (
+              <span className="absolute top-[5px] right-[3px]">
+                <Button
+                  disabled={isLoadingAddress}
+                  type="small"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    dispatch(fetchAddress());
+                  }}
+                >
+                  Alchi xu
+                </Button>
+              </span>
+            )}
           </div>
         </div>
 
@@ -117,7 +149,16 @@ function CreateOrder() {
         <div className="sm:flex sm:justify-center">
           {/* we can send any data to form field without asking the user , by using input field */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <Button type="primary">
+          <input
+            type="hidden"
+            name="position"
+            value={
+              position.longitude && position.latitude
+                ? `${position.latitude},${position.longitude}`
+                : ""
+            }
+          />
+          <Button type="primary" disabled={isSubmitting || isLoadingAddress}>
             {isSubmitting ? "Ordering....." : `Order now for $${totalPrice}`}
           </Button>
         </div>
@@ -130,7 +171,7 @@ function CreateOrder() {
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  // console.log(data);
+  console.log(data);
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
