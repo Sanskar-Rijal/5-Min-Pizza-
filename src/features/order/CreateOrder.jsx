@@ -3,6 +3,9 @@ import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../user/Button";
 import { useSelector } from "react-redux";
+import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
+import EmptyCart from "../cart/EmptyCart";
+import store from "../../store";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -35,10 +38,16 @@ const fakeCart = [
 ];
 
 function CreateOrder() {
-  // const [withPriority, setWithPriority] = useState(false);
-  const cart = fakeCart; //we want to send the cart to the form so that we can get from action
+  const [withPriority, setWithPriority] = useState(false);
+  //const cart = fakeCart; //we want to send the cart to the form so that we can get from action
 
+  const cart = useSelector(getCart);
   const username = useSelector((state) => state.user.username);
+
+  //total price of pizza calculation
+  const totalCartPrice = useSelector(getTotalCartPrice);
+  const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0;
+  const totalPrice = totalCartPrice + priorityPrice;
 
   //showing loading when form is being submitted
   const navigation = useNavigation();
@@ -47,6 +56,10 @@ function CreateOrder() {
   //using another custom hook to get errors from action
   const formErrors = useActionData();
   console.log(formErrors);
+
+  if (!cart.length) {
+    return <EmptyCart />;
+  }
 
   return (
     <div className="px-4 py-6">
@@ -93,8 +106,8 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) => setWithPriority(e.target.checked)}
           />
           <label htmlFor="priority" className="font-medium">
             Want to give your order priority?
@@ -105,7 +118,7 @@ function CreateOrder() {
           {/* we can send any data to form field without asking the user , by using input field */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <Button type="primary">
-            {isSubmitting ? "Ordering....." : "Order now"}
+            {isSubmitting ? "Ordering....." : `Order now for $${totalPrice}`}
           </Button>
         </div>
       </Form>
@@ -121,7 +134,7 @@ export async function action({ request }) {
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
-    priority: data.priority === "on",
+    priority: data.priority,
   };
 
   console.log(order);
@@ -139,6 +152,10 @@ export async function action({ request }) {
 
   const newOrder = await createOrder(order);
   //now we want to redirect the user to order/id page
+
+  //we want to clear cart afer creating a order
+  //dispatch function works only in components not in action functions so we import store here
+  store.dispatch(clearCart());
 
   return redirect(`/order/${newOrder.id}`); //we can't use useNavigate hook here,
   //it can be used only in components
