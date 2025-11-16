@@ -60,7 +60,7 @@ function Order() {
     [fetcher],
   );
   const {
-    id,
+    orderId,
     status,
     priority,
     priorityPrice,
@@ -73,7 +73,7 @@ function Order() {
   return (
     <div className="space-y-5 px-4 py-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="mb-3 text-xl font-semibold">Order #{id} Status</h2>
+        <h2 className="mb-3 text-xl font-semibold">Order #{orderId} Status</h2>
 
         <div className="space-x-3">
           {priority && (
@@ -104,9 +104,9 @@ function Order() {
           <OrderItem
             item={item}
             isLoadingIngredients={fetcher.state === "loading"}
-            key={item.pizzaId}
+            key={item.pizzaId.id}
             ingredients={
-              fetcher?.data?.find((el) => el.id === item.pizzaId)
+              fetcher?.data?.find((el) => el.id === item.pizzaId.id)
                 ?.ingredients ?? []
             }
           />
@@ -114,16 +114,14 @@ function Order() {
       </ul>
 
       <div className="space-y-2 bg-green-200 px-5 py-2">
-        <p className="text-sm font-medium">
-          Price pizza: {formatCurrency(orderPrice)}
-        </p>
+        <p className="text-sm font-medium">Price pizza: Rs {orderPrice}</p>
         {priority && (
           <p className="text-sm font-medium">
-            Price priority: {formatCurrency(priorityPrice)}
+            Price priority: Rs {priorityPrice}
           </p>
         )}
         <p className="font-bold">
-          To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
+          To pay on delivery: Rs {orderPrice + priorityPrice}
         </p>
       </div>
       {!priority && <UpdateOrder order={order} />}

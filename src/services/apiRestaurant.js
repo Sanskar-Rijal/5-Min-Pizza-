@@ -1,4 +1,4 @@
-const API_URL = "https://react-fast-pizza-api.jonas.io/api";
+const API_URL = "https://5-min-pizza-backend.vercel.app/api/v1";
 
 export async function getMenu() {
   const res = await fetch(`${API_URL}/menu`);

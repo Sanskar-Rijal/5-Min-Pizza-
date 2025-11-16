@@ -12,7 +12,7 @@ const CartOverview = forwardRef((props, ref) => {
     <div className="flex items-center justify-between bg-stone-800 px-4 py-4 text-sm text-stone-200 uppercase sm:px-9 md:text-base">
       <p className="space-x-4 font-semibold text-stone-300 sm:space-x-8">
         <span>{totalPizzas} pizzas</span>
-        <span>${totalPrice}</span>
+        <span>Rs {totalPrice}</span>
       </p>
       <Link to="/cart" ref={ref}>
         Open cart &rarr;

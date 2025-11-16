@@ -159,7 +159,7 @@ function CreateOrder() {
             }
           />
           <Button type="primary" disabled={isSubmitting || isLoadingAddress}>
-            {isSubmitting ? "Ordering....." : `Order now for $${totalPrice}`}
+            {isSubmitting ? "Ordering....." : `Order now for Rs ${totalPrice}`}
           </Button>
         </div>
       </Form>
@@ -178,7 +178,7 @@ export async function action({ request }) {
     priority: data.priority,
   };
 
-  console.log(order);
+  console.log("this is going to the backend", order);
 
   //checking whether the phn no is valid or not
   const errors = {};
@@ -198,7 +198,7 @@ export async function action({ request }) {
   //dispatch function works only in components not in action functions so we import store here
   store.dispatch(clearCart());
 
-  return redirect(`/order/${newOrder.id}`); //we can't use useNavigate hook here,
+  return redirect(`/order/${newOrder.orderId}`); //we can't use useNavigate hook here,
   //it can be used only in components
 }
 

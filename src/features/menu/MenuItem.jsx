@@ -52,7 +52,7 @@ function MenuItem({ pizza, cartRef }) {
         </p>
         <div className="mt-auto flex items-center justify-between">
           {!soldOut ? (
-            <p className="text-sm">{formatCurrency(unitPrice)}</p>
+            <p className="text-sm">Rs {unitPrice}</p>
           ) : (
             <p className="text-sm font-bold text-red-400 uppercase">Sold out</p>
           )}
